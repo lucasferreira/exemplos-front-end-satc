@@ -1,7 +1,15 @@
-export function FormSearch() {
+export function FormSearch({ search, onSearchText, onSubmit }) {
   return (
-    <form className="mb-4 flex flex-row gap-2">
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit();
+      }}
+      className="mb-4 flex flex-row gap-2"
+    >
       <input
+        value={search}
+        onChange={(e) => onSearchText(e?.target?.value)}
         placeholder="Encontre um Filme"
         type="text"
         id="search"

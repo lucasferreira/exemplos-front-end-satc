@@ -1,37 +1,71 @@
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+
+import { Loading } from "../components/Loading";
+
 export function MovieView() {
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [movie, setMovie] = useState(null);
+
+  async function searchMovie() {
+    setLoading(true);
+
+    const response = await fetch(
+      `https://www.omdbapi.com/?i=${id}&apikey=1cd66749`,
+    );
+    const data = await response.json();
+    if (data) {
+      setMovie(data);
+    } else {
+      setMovie(null);
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    searchMovie();
+  }, []);
+
   return (
-    <section className="mt-3 pb-4">
-      <div className="pb-5 pt-3.5">
-        <h2 className="text-xl font-bold xl:text-2xl">Nome do Filme (2021)</h2>
-      </div>
-      <div className="flex flex-row gap-2">
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1_SX300.jpg"
-          alt="Filme"
-          className="w-1/3 rounded-lg"
-        />
-        <div className="flex flex-col gap-2 px-1.5 py-3">
-          <p className="text-sm font-bold">Action, Adventure, Sci-Fi</p>
-          <p>
-            DAfter being held captive in an Afghan cave, billionaire engineer
-            Tony Stark creates a unique weaponized suit of armor to fight evil.
-          </p>
-          <p className="text-sm">
-            <strong>Elenco:</strong> Robert Downey Jr., Gwyneth Paltrow,
-            Terrence Howard
-          </p>
-          <p className="text-sm">
-            <strong>Diretor:</strong> Jon Favreau
-          </p>
-          <p className="text-sm italic">126 min</p>
-          <a
-            href="#"
-            className="my-3 self-start rounded-md bg-slate-400 px-2 py-1 text-sm font-bold text-white hover:bg-slate-500"
-          >
-            ← Voltar para a capa
-          </a>
-        </div>
-      </div>
-    </section>
+    <div>
+      {loading && <Loading />}
+      {movie && (
+        <section className="mt-3 pb-4">
+          <div className="pb-5 pt-3.5">
+            <h2 className="text-xl font-bold xl:text-2xl">
+              {movie.Title} ({movie.Year})
+            </h2>
+          </div>
+          <div className="flex flex-row gap-2">
+            {movie.Poster && movie.Poster !== "N/A" && (
+              <img
+                src={movie.Poster}
+                alt={movie.Title}
+                className="w-1/3 rounded-lg"
+              />
+            )}
+            <div className="flex flex-col gap-2 px-1.5 py-3">
+              <p className="text-sm font-bold">{movie.Genre}</p>
+              <p>{movie.Plot}</p>
+              <p className="text-sm">
+                <strong>Elenco:</strong> {movie.Actors}
+              </p>
+              <p className="text-sm">
+                <strong>Diretor:</strong> {movie.Director}
+              </p>
+              <p className="text-sm italic">{movie.Runtime}</p>
+              <Link
+                to="/"
+                className="my-3 self-start rounded-md bg-slate-400 px-2 py-1 text-sm font-bold text-white hover:bg-slate-500"
+              >
+                ← Voltar para a capa
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+    </div>
   );
 }
