@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext } from "react";
+
+import { LoginContext } from "../stores/LoginContext";
 
 import { testLogin } from "../actions/login.js";
 
 export function Login() {
-  const [userData, setUserData] = useState(null);
+  const { userData, login } = useContext(LoginContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,7 +25,7 @@ export function Login() {
 
     try {
       const userData = await testLogin(username, password);
-      setUserData(userData);
+      login(userData);
     } catch {
       alert("Não foi possível fazer login, verifique seu usuário senha.");
     }

@@ -1,4 +1,8 @@
+import { useContext } from "react";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { LoginProvider, LoginContext } from "./stores/LoginContext";
 
 import { RootLayout } from "./layouts/RootLayout";
 
@@ -7,7 +11,7 @@ import { Home } from "./routes/Home";
 import { Alunos } from "./routes/Alunos";
 import { AlunoAdd } from "./routes/AlunoAdd";
 
-const router = createBrowserRouter([
+const internalRouter = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
@@ -28,15 +32,23 @@ const router = createBrowserRouter([
   },
 ]);
 
-const externalRouter = createBrowserRouter([
+const publicRouter = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
   },
 ]);
 
-function App() {
-  return <RouterProvider router={router} />;
+function WebRouter() {
+  const { userData } = useContext(LoginContext);
+
+  return <RouterProvider router={!userData ? publicRouter : internalRouter} />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <LoginProvider>
+      <WebRouter />
+    </LoginProvider>
+  );
+}
