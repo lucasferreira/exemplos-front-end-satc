@@ -1,20 +1,9 @@
-import { useState } from "react";
+import { useContext } from "react";
+
+import { AlunosContext } from "../stores/AlunosContext";
 
 export function Alunos() {
-  const [alunos, setAlunos] = useState([
-    {
-      id: 1,
-      name: "Lucas R. Ferreira",
-      email: "panchorf@gmail.com",
-      nclass: "Front-end",
-    },
-    {
-      id: 2,
-      name: "Pedro Ferreira",
-      email: "peterparker@gmail.com",
-      nclass: "Banco de Dados I",
-    },
-  ]);
+  const { alunos, removeAluno } = useContext(AlunosContext);
 
   return (
     <div>
@@ -54,11 +43,25 @@ export function Alunos() {
                 </td>
                 <td className="px-6 py-4">{aluno.nclass}</td>
                 <td className="px-6 py-4 text-center">
-                  <a href="#" className="text-indigo-200 hover:text-indigo-300">
+                  <a
+                    href="#editar"
+                    className="text-indigo-200 hover:text-indigo-300"
+                  >
                     Editar
                   </a>
                   {` `}|{` `}
-                  <a href="#" className="text-red-500 hover:text-red-600">
+                  <a
+                    href="#excluir"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      if (
+                        window.confirm("Deseja realmente excluir este aluno?")
+                      ) {
+                        removeAluno(aluno.id);
+                      }
+                    }}
+                    className="text-red-500 hover:text-red-600"
+                  >
                     Excluir
                   </a>
                 </td>

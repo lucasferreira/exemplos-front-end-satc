@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { AlunosContext } from "../stores/AlunosContext";
 
 export function AlunoAdd() {
+  const { adicionaAluno } = useContext(AlunosContext);
+  const navigate = useNavigate();
+
   const [aluno, setAluno] = useState({
     id: generateId(),
     name: "",
@@ -8,13 +14,34 @@ export function AlunoAdd() {
     nclass: "",
   });
 
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    adicionaAluno(aluno);
+
+    setAluno({
+      id: generateId(),
+      name: "",
+      email: "",
+      nclass: "",
+    });
+
+    setTimeout(() => {
+      navigate("/alunos");
+    }, 900);
+  }
+
   return (
     <div>
       <h2 className="mb-6 text-xl font-bold xl:text-2xl">
         Cadastrar novo Aluno
       </h2>
       <div className="flex gap-8">
-        <form method="POST" className="flex-1 space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          method="POST"
+          className="flex-1 space-y-6"
+        >
           <div>
             <label
               htmlFor="name"
@@ -84,7 +111,7 @@ export function AlunoAdd() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              ENTRAR
+              CADASTRAR ALUNO
             </button>
           </div>
         </form>

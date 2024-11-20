@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { LoginProvider, LoginContext } from "./stores/LoginContext";
+import { AlunosProvider } from "./stores/AlunosContext";
 
 import { RootLayout } from "./layouts/RootLayout";
 
@@ -48,7 +49,9 @@ function WebRouter() {
 export default function App() {
   return (
     <LoginProvider>
-      <WebRouter />
+      <AlunosProvider>
+        <WebRouter />
+      </AlunosProvider>
     </LoginProvider>
   );
 }
